@@ -58923,8 +58923,6 @@ module.exports = yeast;
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var _this2 = this;
-
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
@@ -58958,14 +58956,22 @@ var app = new Vue({
     messages: []
   },
   created: function created() {
+    var _this = this;
+
     this.fetchMessages();
+    Echo.private('chat').listen('MessageSent', function (e) {
+      _this.messages.push({
+        message: e.message.message,
+        user: e.user
+      });
+    });
   },
   methods: {
     fetchMessages: function fetchMessages() {
-      var _this = this;
+      var _this2 = this;
 
       axios.get('/messages').then(function (response) {
-        _this.messages = response.data;
+        _this2.messages = response.data;
       });
     },
     addMessage: function addMessage(message) {
@@ -58975,12 +58981,6 @@ var app = new Vue({
       });
     }
   }
-});
-Echo.private('chat').listen('MessageSent', function (e) {
-  _this2.messages.push({
-    message: e.message.message,
-    user: e.user
-  });
 });
 
 /***/ }),
